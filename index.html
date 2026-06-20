@@ -17,35 +17,6 @@
     justify-content: center;
     overflow-y: auto;
   }
-    .venue-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-    margin-bottom: 1.8rem;
-  }
-  .venue-item {
-    padding: 0.9rem 0.5rem;
-    border-radius: 14px;
-    border: 2px solid #f0c4cc;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-  }
-  .venue-item span.label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #c0305a;
-  }
-  .venue-item:hover, .venue-item.selected {
-    background: #fff0f3;
-    border-color: #c0305a;
-    transform: scale(1.04);
-  }
 
   .hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .heart-float {
@@ -88,7 +59,6 @@
     box-shadow: 0 8px 40px rgba(220, 80, 110, 0.13);
   }
 
-  /* Sticker box */
   .sticker-box {
     font-size: 5rem;
     background: #fff0f3;
@@ -206,13 +176,13 @@
     border-color: #c0305a;
   }
 
-  .treats-grid {
+  .treats-grid, .venue-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.8rem;
     margin-bottom: 1.8rem;
   }
-  .treat-item {
+  .treat-item, .venue-item {
     padding: 0.9rem 0.5rem;
     border-radius: 14px;
     border: 2px solid #f0c4cc;
@@ -225,12 +195,13 @@
     align-items: center;
     gap: 0.3rem;
   }
-  .treat-item span.label {
+  .treat-item span.label, .venue-item span.label {
     font-size: 0.8rem;
     font-weight: 600;
     color: #c0305a;
   }
-  .treat-item:hover, .treat-item.selected {
+  .treat-item:hover, .treat-item.selected,
+  .venue-item:hover, .venue-item.selected {
     background: #fff0f3;
     border-color: #c0305a;
     transform: scale(1.04);
@@ -291,9 +262,9 @@
     .date-grid, .time-grid { gap: 0.5rem; margin-bottom: 1rem; }
     .day-btn { padding: 0.5rem 0.3rem; font-size: 0.8rem; }
     .time-btn { padding: 0.45rem 0.2rem; font-size: 0.78rem; }
-    .treats-grid { gap: 0.6rem; margin-bottom: 1.2rem; }
-    .treat-item { padding: 0.7rem 0.4rem; font-size: 1.2rem; }
-    .treat-item span.label { font-size: 0.72rem; }
+    .treats-grid, .venue-grid { gap: 0.6rem; margin-bottom: 1.2rem; }
+    .treat-item, .venue-item { padding: 0.7rem 0.4rem; font-size: 1.2rem; }
+    .treat-item span.label, .venue-item span.label { font-size: 0.72rem; }
     .btn-confirm { padding: 0.7rem 2rem; font-size: 0.95rem; }
     .confirm-summary { padding: 1rem 1rem; font-size: 0.88rem; }
     .confetti-area { font-size: 1.5rem; margin: 0.3rem 0 1rem; }
@@ -308,7 +279,7 @@
 <div class="page active" id="page1">
   <div class="card">
     <div class="sticker-box">🥹</div>
-    <h1>Dottie,,Will you go on a date with me?</h1>
+    <h1>Dottie,,will you go on a date with me?</h1>
     <p class="sub">Think carefully… only one answer makes sense 😏</p>
     <div class="btn-row">
       <button class="btn btn-yes" onclick="goToReaction()">Yes! 🥰</button>
@@ -347,14 +318,11 @@
 
     <p class="section-label">Time</p>
     <div class="time-grid">
+      <button class="time-btn" onclick="selectTime(this)">10:00 AM</button>
       <button class="time-btn" onclick="selectTime(this)">12:00 PM</button>
-      <button class="time-btn" onclick="selectTime(this)">1:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">2:00 PM</button>
-      <button class="time-btn" onclick="selectTime(this)">3:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">4:00 PM</button>
-      <button class="time-btn" onclick="selectTime(this)">5:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">6:00 PM</button>
-      <button class="time-btn" onclick="selectTime(this)">7:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">8:00 PM</button>
     </div>
 
@@ -380,23 +348,30 @@
       <div class="treat-item" onclick="toggleTreat(this, 'Chocolates')">🍫<span class="label">Chocolates</span></div>
     </div>
 
+    <button class="btn-confirm" id="nextToVenue" onclick="goToPage4()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- PAGE 4: Venue -->
+<div class="page" id="page4">
+  <div class="card">
+    <span class="emoji-big">📍</span>
+    <h1>Where shall we go?</h1>
+    <p class="sub">Pick the spot for our date 🌹</p>
+
+    <div class="venue-grid">
+      <div class="venue-item" onclick="selectVenue(this, 'Aticas')">🍽️<span class="label">Aticas</span></div>
+      <div class="venue-item" onclick="selectVenue(this, 'Kwa Moni')">🪔<span class="label">Kwa Moni</span></div>
+      <div class="venue-item" onclick="selectVenue(this, 'Kobbies')">🍔<span class="label">Kobbies</span></div>
+      <div class="venue-item" onclick="selectVenue(this, 'Scoops and Spoons')">🍦<span class="label">Scoops and Spoons</span></div>
+      <div class="venue-item" onclick="selectVenue(this, 'AI Cha')" style="grid-column: 1 / -1; max-width: 50%; margin: 0 auto; width: 100%;">🧋<span class="label">AI Cha</span></div>
+    </div>
+
     <button class="btn-confirm" id="finishBtn" onclick="goToConfirm()" disabled>Let's do this! 🎉</button>
   </div>
 </div>
 
-<div class="page" id="page4">
-  <!-- Venue Selection -->
-<p class="section-label">Where shall we go?</p>
-<div class="venue-grid">
-  <div class="venue-item" onclick="toggleVenue(this, 'Aticas')">🍽️<span class="label">Aticas</span></div>
-  <div class="venue-item" onclick="toggleVenue(this, 'Kwa Moni')">🪔<span class="label">Kwa Moni</span></div>
-  <div class="venue-item" onclick="toggleVenue(this, 'Kobbies')">🍔<span class="label">Kobbies</span></div>
-  <div class="venue-item" onclick="toggleVenue(this, 'Scoops and Spoons')">🍦<span class="label">Scoops and Spoons</span></div>
-  <div class="venue-item" onclick="toggleVenue(this, 'AI Cha')">🧋<span class="label">AI Cha</span></div>
-</div>
-</div>
-
-<!-- PAGE 4: Confirmation -->
+<!-- PAGE 5: Confirmation -->
 <div class="page" id="page5">
   <div class="card">
     <span class="emoji-big">🥳</span>
@@ -458,11 +433,12 @@
     noBtn.style.display = 'none';
     goToPage('pageReaction');
   }
-
   function goToPage2() { goToPage('page2'); }
-
   function goToPage3() {
     if (selectedDay && selectedTime) goToPage('page3');
+  }
+  function goToPage4() {
+    if (selectedTreats.length > 0) goToPage('page4');
   }
 
   // Day & Time
@@ -497,12 +473,22 @@
       el.classList.add('selected');
       selectedTreats.push(name);
     }
-    checkTreatsReady();
+    document.getElementById('nextToVenue').disabled = selectedTreats.length === 0;
+  }
+
+  // Venue
+  let selectedVenue = null;
+
+  function selectVenue(el, name) {
+    document.querySelectorAll('.venue-item').forEach(v => v.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedVenue = name;
+    document.getElementById('finishBtn').disabled = false;
   }
 
   // Final confirmation
   function goToConfirm() {
-    if (selectedTreats.length === 0) return;
+    if (!selectedVenue) return;
     document.getElementById('summaryBox').innerHTML = `
       <strong>Day:</strong> ${selectedDay}<br>
       <strong>Time:</strong> ${selectedTime}<br>
@@ -511,23 +497,8 @@
       Na pia ukitaka we can still have some shots 🥃🍻
       Ama unataka mzinga 😏😂😂😂
     `;
-    goToPage('page4');
+    goToPage('page5');
   }
-
-  let selectedVenue = null;
-
-function toggleVenue(el, name) {
-  document.querySelectorAll('.venue-item').forEach(v => v.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedVenue = name;
-  checkTreatsReady();
-}
-
-// Update your existing checkTreatsReady or finishBtn logic:
-function checkTreatsReady() {
-  document.getElementById('finishBtn').disabled = 
-    !(selectedTreats.length > 0 && selectedVenue);
-}
 </script>
 </body>
 </html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>A Little Question 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #fff0f3;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Floating hearts background */
+  .hearts-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .heart-float {
+    position: absolute;
+    font-size: 1.4rem;
+    opacity: 0.18;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0.1; }
+    50%  { opacity: 0.22; }
+    100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
+  }
+
+  /* Pages */
+  .page {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    position: relative;
+    z-index: 1;
+    animation: fadeIn 0.7s ease;
+  }
+  .page.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 8px 40px rgba(220, 80, 110, 0.13);
+  }
+
+  .emoji-big { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #c0305a;
+    line-height: 1.35;
+    margin-bottom: 0.6rem;
+  }
+  .sub {
+    font-weight: 300;
+    color: #999;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  .btn {
+    padding: 0.8rem 2.2rem;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.1rem;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-yes {
+    background: linear-gradient(135deg, #e8476a, #c0305a);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(192, 48, 90, 0.35);
+  }
+  .btn-yes:hover { transform: scale(1.07); box-shadow: 0 6px 22px rgba(192, 48, 90, 0.45); }
+
+  .btn-no {
+    background: #f1f1f1;
+    color: #aaa;
+    position: fixed;
+    z-index: 999;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  /* Date picker page */
+  .date-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    margin-bottom: 1.5rem;
+  }
+  .day-btn {
+    padding: 0.65rem 0.4rem;
+    border-radius: 12px;
+    border: 2px solid #f0c4cc;
+    background: #fff;
+    color: #c0305a;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .day-btn:hover, .day-btn.selected {
+    background: #c0305a;
+    color: #fff;
+    border-color: #c0305a;
+  }
+
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    margin-bottom: 1.8rem;
+  }
+  .time-btn {
+    padding: 0.55rem 0.3rem;
+    border-radius: 10px;
+    border: 2px solid #f0c4cc;
+    background: #fff;
+    color: #c0305a;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .time-btn:hover, .time-btn.selected {
+    background: #c0305a;
+    color: #fff;
+    border-color: #c0305a;
+  }
+
+  /* Treats page */
+  .treats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.8rem;
+  }
+  .treat-item {
+    padding: 0.9rem 0.5rem;
+    border-radius: 14px;
+    border: 2px solid #f0c4cc;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .treat-item span.label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c0305a;
+  }
+  .treat-item:hover, .treat-item.selected {
+    background: #fff0f3;
+    border-color: #c0305a;
+    transform: scale(1.04);
+  }
+
+  /* Confirm button */
+  .btn-confirm {
+    background: linear-gradient(135deg, #e8476a, #c0305a);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 0.85rem 2.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(192, 48, 90, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-confirm:hover { transform: scale(1.05); box-shadow: 0 6px 22px rgba(192,48,90,0.4); }
+  .btn-confirm:disabled { background: #ddd; color: #aaa; box-shadow: none; cursor: not-allowed; }
+
+  /* Section label */
+  .section-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #e8476a;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    text-align: left;
+  }
+
+  /* Confirmation page */
+  .confetti-area { font-size: 2rem; margin: 0.5rem 0 1.5rem; letter-spacing: 0.2em; }
+  .confirm-summary {
+    background: #fff0f3;
+    border-radius: 14px;
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.8;
+  }
+  .confirm-summary strong { color: #c0305a; }
+
+  .sign-off {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #c0305a;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating hearts background -->
+<div class="hearts-bg" id="heartsBg"></div>
+
+<!-- PAGE 1: The Question -->
+<div class="page active" id="page1">
+  <div class="card">
+    <span class="emoji-big">💌</span>
+    <h1>Will you go on a date with me?</h1>
+    <p class="sub">Think carefully… only one answer makes sense 😏</p>
+    <div class="btn-row">
+      <button class="btn btn-yes" onclick="goToPage2()">Yes! 🥰</button>
+    </div>
+    <button class="btn btn-no" id="noBtn">No 🙅</button>
+  </div>
+</div>
+
+<!-- PAGE 2: Pick a day & time -->
+<div class="page" id="page2">
+  <div class="card">
+    <span class="emoji-big">📅</span>
+    <h1>When shall we meet?</h1>
+    <p class="sub">Pick your favourite day and time</p>
+
+    <p class="section-label">Day</p>
+    <div class="date-grid" id="dayGrid">
+      <button class="day-btn" onclick="selectDay(this)">Monday</button>
+      <button class="day-btn" onclick="selectDay(this)">Tuesday</button>
+      <button class="day-btn" onclick="selectDay(this)">Wednesday</button>
+      <button class="day-btn" onclick="selectDay(this)">Thursday</button>
+      <button class="day-btn" onclick="selectDay(this)">Friday</button>
+      <button class="day-btn" onclick="selectDay(this)">Saturday</button>
+      <button class="day-btn" onclick="selectDay(this)" style="grid-column: 2;">Sunday</button>
+    </div>
+
+    <p class="section-label">Time</p>
+    <div class="time-grid" id="timeGrid">
+      <button class="time-btn" onclick="selectTime(this)">10:00 AM</button>
+      <button class="time-btn" onclick="selectTime(this)">12:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">2:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">4:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">6:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">8:00 PM</button>
+    </div>
+
+    <button class="btn-confirm" id="nextToTreats" onclick="goToPage3()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- PAGE 3: Treats -->
+<div class="page" id="page3">
+  <div class="card">
+    <span class="emoji-big">🍦</span>
+    <h1>What are we having?</h1>
+    <p class="sub">What would you like us to have? </p>
+
+    <div class="treats-grid">
+      <div class="treat-item" onclick="toggleTreat(this, 'Ice Cream')">🍦<span class="label">Ice Cream</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Pizza')">🍕<span class="label">Pizza</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Smoothies')">🥤<span class="label">Smoothies</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Cake')">🎂<span class="label">Cake</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Coffee')">☕<span class="label">Coffee</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Waffles')">🧇<span class="label">Waffles</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Fries')">🍟<span class="label">Fries</span></div>
+      <div class="treat-item" onclick="toggleTreat(this, 'Chocolates')">🍫<span class="label">Chocolates</span></div>
+    </div>
+
+    <button class="btn-confirm" id="finishBtn" onclick="goToConfirm()" disabled>Let's do this! 🎉</button>
+  </div>
+</div>
+
+<!-- PAGE 4: Confirmation -->
+<div class="page" id="page4">
+  <div class="card">
+    <span class="emoji-big">🥳</span>
+    <h1>It's a date!</h1>
+    <div class="confetti-area">🎊 💕 🎊</div>
+    <div class="confirm-summary" id="summaryBox"></div>
+    <p class="sign-off">Can't wait to see you ❤️</p>
+  </div>
+</div>
+
+<script>
+  // ---- Floating hearts ----
+  const bg = document.getElementById('heartsBg');
+  const symbols = ['❤️','💕','💗','💓','🌸','✨','💖'];
+  for (let i = 0; i < 18; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-float';
+    h.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (6 + Math.random() * 10) + 's';
+    h.style.animationDelay = (Math.random() * 10) + 's';
+    h.style.fontSize = (0.9 + Math.random() * 1.4) + 'rem';
+    bg.appendChild(h);
+  }
+
+  // ---- No button escape logic ----
+  const noBtn = document.getElementById('noBtn');
+
+  // Place it initially near the Yes button
+  function placeNoBtn() {
+    const card = document.querySelector('#page1 .card');
+    const rect = card.getBoundingClientRect();
+    noBtn.style.top = (rect.bottom - 80) + 'px';
+    noBtn.style.left = (rect.left + rect.width / 2 + 30) + 'px';
+  }
+  window.addEventListener('load', placeNoBtn);
+  window.addEventListener('resize', placeNoBtn);
+
+  // Run away on hover or touch
+  noBtn.addEventListener('mouseover', runAway);
+  noBtn.addEventListener('touchstart', runAway, { passive: true });
+
+  function runAway() {
+    const margin = 80;
+    const bw = noBtn.offsetWidth;
+    const bh = noBtn.offsetHeight;
+    const maxX = window.innerWidth - bw - margin;
+    const maxY = window.innerHeight - bh - margin;
+    const newX = Math.random() * (maxX - margin) + margin;
+    const newY = Math.random() * (maxY - margin) + margin;
+    noBtn.style.left = newX + 'px';
+    noBtn.style.top  = newY + 'px';
+  }
+
+  // ---- Page navigation ----
+  function goToPage(n) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + n).classList.add('active');
+  }
+
+  function goToPage2() {
+    noBtn.style.display = 'none'; // hide No button once Yes is clicked
+    goToPage(2);
+  }
+
+  // ---- Day & Time selection ----
+  let selectedDay = null;
+  let selectedTime = null;
+
+  function selectDay(el) {
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDay = el.textContent;
+    checkDateReady();
+  }
+
+  function selectTime(el) {
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedTime = el.textContent;
+    checkDateReady();
+  }
+
+  function checkDateReady() {
+    document.getElementById('nextToTreats').disabled = !(selectedDay && selectedTime);
+  }
+
+  function goToPage3() {
+    if (selectedDay && selectedTime) goToPage(3);
+  }
+
+  // ---- Treats selection ----
+  let selectedTreats = [];
+
+  function toggleTreat(el, name) {
+    if (el.classList.contains('selected')) {
+      el.classList.remove('selected');
+      selectedTreats = selectedTreats.filter(t => t !== name);
+    } else {
+      el.classList.add('selected');
+      selectedTreats.push(name);
+    }
+    document.getElementById('finishBtn').disabled = selectedTreats.length === 0;
+  }
+
+  // ---- Final confirmation ----
+  function goToConfirm() {
+    if (selectedTreats.length === 0) return;
+    document.getElementById('summaryBox').innerHTML = `
+      <strong>Day:</strong> ${selectedDay}<br>
+      <strong>Time:</strong> ${selectedTime}<br>
+      <strong>On the menu:</strong> ${selectedTreats.join(', ')}<br><br>
+      Na pia ukitaka we can still have some shots 🥃🍻
+    `;
+    goToPage(4);
+  }
+</script>
+</body>
+</html>

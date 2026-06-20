@@ -18,10 +18,7 @@
     overflow-y: auto;
   }
 
-  /* Floating hearts background */
-  .hearts-bg {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  }
+  .hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .heart-float {
     position: absolute;
     font-size: 1.4rem;
@@ -34,7 +31,6 @@
     100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
   }
 
-  /* Pages */
   .page {
     display: none;
     flex-direction: column;
@@ -45,6 +41,7 @@
     position: relative;
     z-index: 1;
     animation: fadeIn 0.7s ease;
+    width: 100%;
   }
   .page.active { display: flex; }
 
@@ -56,10 +53,31 @@
   .card {
     background: #ffffff;
     border-radius: 24px;
-    padding: 3rem 2.5rem;
+    padding: 2.5rem 2.5rem;
     max-width: 480px;
     width: 100%;
     box-shadow: 0 8px 40px rgba(220, 80, 110, 0.13);
+  }
+
+  /* Sticker box */
+  .sticker-box {
+    font-size: 5rem;
+    background: #fff0f3;
+    border-radius: 20px;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.2rem;
+    box-shadow: 0 4px 16px rgba(192, 48, 90, 0.12);
+  }
+  .sticker-box.bounce {
+    animation: bounce 0.6s ease infinite alternate;
+  }
+  @keyframes bounce {
+    from { transform: scale(1); }
+    to   { transform: scale(1.12); }
   }
 
   .emoji-big { font-size: 3.5rem; margin-bottom: 1rem; display: block; }
@@ -79,7 +97,6 @@
     font-style: italic;
   }
 
-  /* Buttons */
   .btn-row {
     display: flex;
     gap: 1.2rem;
@@ -114,7 +131,6 @@
     transition: none;
   }
 
-  /* Date picker page */
   .date-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -161,7 +177,6 @@
     border-color: #c0305a;
   }
 
-  /* Treats page */
   .treats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -192,7 +207,6 @@
     transform: scale(1.04);
   }
 
-  /* Confirm button */
   .btn-confirm {
     background: linear-gradient(135deg, #e8476a, #c0305a);
     color: #fff;
@@ -208,7 +222,6 @@
   .btn-confirm:hover { transform: scale(1.05); box-shadow: 0 6px 22px rgba(192,48,90,0.4); }
   .btn-confirm:disabled { background: #ddd; color: #aaa; box-shadow: none; cursor: not-allowed; }
 
-  /* Section label */
   .section-label {
     font-size: 0.8rem;
     text-transform: uppercase;
@@ -219,7 +232,6 @@
     text-align: left;
   }
 
-  /* Confirmation page */
   .confetti-area { font-size: 2rem; margin: 0.5rem 0 1.5rem; letter-spacing: 0.2em; }
   .confirm-summary {
     background: #fff0f3;
@@ -240,23 +252,49 @@
     font-size: 1.1rem;
     margin-top: 0.5rem;
   }
+
+  @media (max-width: 480px) {
+    .page { padding: 1.5rem 0.75rem; }
+    .card { padding: 1.5rem 1.2rem; border-radius: 18px; }
+    .sticker-box { width: 80px; height: 80px; font-size: 3.8rem; }
+    h1 { font-size: 1.45rem; margin-bottom: 0.4rem; }
+    .sub { font-size: 0.85rem; margin-bottom: 1.2rem; }
+    .date-grid, .time-grid { gap: 0.5rem; margin-bottom: 1rem; }
+    .day-btn { padding: 0.5rem 0.3rem; font-size: 0.8rem; }
+    .time-btn { padding: 0.45rem 0.2rem; font-size: 0.78rem; }
+    .treats-grid { gap: 0.6rem; margin-bottom: 1.2rem; }
+    .treat-item { padding: 0.7rem 0.4rem; font-size: 1.2rem; }
+    .treat-item span.label { font-size: 0.72rem; }
+    .btn-confirm { padding: 0.7rem 2rem; font-size: 0.95rem; }
+    .confirm-summary { padding: 1rem 1rem; font-size: 0.88rem; }
+    .confetti-area { font-size: 1.5rem; margin: 0.3rem 0 1rem; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Floating hearts background -->
 <div class="hearts-bg" id="heartsBg"></div>
 
 <!-- PAGE 1: The Question -->
 <div class="page active" id="page1">
   <div class="card">
-    <span class="emoji-big">💌</span>
+    <div class="sticker-box">🥺</div>
     <h1>Will you go on a date with me?</h1>
     <p class="sub">Think carefully… only one answer makes sense 😏</p>
     <div class="btn-row">
-      <button class="btn btn-yes" onclick="goToPage2()">Yes! 🥰</button>
+      <button class="btn btn-yes" onclick="goToReaction()">Yes! 🥰</button>
     </div>
     <button class="btn btn-no" id="noBtn">No 🙅</button>
+  </div>
+</div>
+
+<!-- PAGE 1.5: Reaction after Yes -->
+<div class="page" id="pageReaction">
+  <div class="card">
+    <div class="sticker-box bounce">😭</div>
+    <h1>WAIT YOU ACTUALLY SAID YES??</h1>
+    <p class="sub">I was so ready for you to say no 😅</p>
+    <button class="btn-confirm" onclick="goToPage2()">okay okay! →</button>
   </div>
 </div>
 
@@ -264,11 +302,11 @@
 <div class="page" id="page2">
   <div class="card">
     <span class="emoji-big">📅</span>
-    <h1>When shall we meet?</h1>
+    <h1>So... When are you free?</h1>
     <p class="sub">Pick your favourite day and time</p>
 
     <p class="section-label">Day</p>
-    <div class="date-grid" id="dayGrid">
+    <div class="date-grid">
       <button class="day-btn" onclick="selectDay(this)">Monday</button>
       <button class="day-btn" onclick="selectDay(this)">Tuesday</button>
       <button class="day-btn" onclick="selectDay(this)">Wednesday</button>
@@ -279,7 +317,7 @@
     </div>
 
     <p class="section-label">Time</p>
-    <div class="time-grid" id="timeGrid">
+    <div class="time-grid">
       <button class="time-btn" onclick="selectTime(this)">10:00 AM</button>
       <button class="time-btn" onclick="selectTime(this)">12:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">2:00 PM</button>
@@ -296,8 +334,8 @@
 <div class="page" id="page3">
   <div class="card">
     <span class="emoji-big">🍦</span>
-    <h1>What are we having?</h1>
-    <p class="sub">What would you like us to have? </p>
+    <h1>What are we feeling?🍽️🍴</h1>
+    <p class="sub">Pick your vibe</p>
 
     <div class="treats-grid">
       <div class="treat-item" onclick="toggleTreat(this, 'Ice Cream')">🍦<span class="label">Ice Cream</span></div>
@@ -321,12 +359,12 @@
     <h1>It's a date!</h1>
     <div class="confetti-area">🎊 💕 🎊</div>
     <div class="confirm-summary" id="summaryBox"></div>
-    <p class="sign-off">Can't wait to see you ❤️</p>
+    <p class="sign-off">Ndio maana nakupendanga ♥️🤭</p>
   </div>
 </div>
 
 <script>
-  // ---- Floating hearts ----
+  // Floating hearts
   const bg = document.getElementById('heartsBg');
   const symbols = ['❤️','💕','💗','💓','🌸','✨','💖'];
   for (let i = 0; i < 18; i++) {
@@ -340,10 +378,9 @@
     bg.appendChild(h);
   }
 
-  // ---- No button escape logic ----
+  // No button escape
   const noBtn = document.getElementById('noBtn');
 
-  // Place it initially near the Yes button
   function placeNoBtn() {
     const card = document.querySelector('#page1 .card');
     const rect = card.getBoundingClientRect();
@@ -353,7 +390,6 @@
   window.addEventListener('load', placeNoBtn);
   window.addEventListener('resize', placeNoBtn);
 
-  // Run away on hover or touch
   noBtn.addEventListener('mouseover', runAway);
   noBtn.addEventListener('touchstart', runAway, { passive: true });
 
@@ -363,26 +399,30 @@
     const bh = noBtn.offsetHeight;
     const maxX = window.innerWidth - bw - margin;
     const maxY = window.innerHeight - bh - margin;
-    const newX = Math.random() * (maxX - margin) + margin;
-    const newY = Math.random() * (maxY - margin) + margin;
-    noBtn.style.left = newX + 'px';
-    noBtn.style.top  = newY + 'px';
+    noBtn.style.left = (Math.random() * (maxX - margin) + margin) + 'px';
+    noBtn.style.top  = (Math.random() * (maxY - margin) + margin) + 'px';
   }
 
-  // ---- Page navigation ----
-  function goToPage(n) {
+  // Page navigation
+  function goToPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById('page' + n).classList.add('active');
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
   }
 
-  function goToPage2() {
-    noBtn.style.display = 'none'; // hide No button once Yes is clicked
-    goToPage(2);
+  function goToReaction() {
+    noBtn.style.display = 'none';
+    goToPage('pageReaction');
   }
 
-  // ---- Day & Time selection ----
-  let selectedDay = null;
-  let selectedTime = null;
+  function goToPage2() { goToPage('page2'); }
+
+  function goToPage3() {
+    if (selectedDay && selectedTime) goToPage('page3');
+  }
+
+  // Day & Time
+  let selectedDay = null, selectedTime = null;
 
   function selectDay(el) {
     document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
@@ -402,11 +442,7 @@
     document.getElementById('nextToTreats').disabled = !(selectedDay && selectedTime);
   }
 
-  function goToPage3() {
-    if (selectedDay && selectedTime) goToPage(3);
-  }
-
-  // ---- Treats selection ----
+  // Treats
   let selectedTreats = [];
 
   function toggleTreat(el, name) {
@@ -420,7 +456,7 @@
     document.getElementById('finishBtn').disabled = selectedTreats.length === 0;
   }
 
-  // ---- Final confirmation ----
+  // Final confirmation
   function goToConfirm() {
     if (selectedTreats.length === 0) return;
     document.getElementById('summaryBox').innerHTML = `
@@ -428,8 +464,9 @@
       <strong>Time:</strong> ${selectedTime}<br>
       <strong>On the menu:</strong> ${selectedTreats.join(', ')}<br><br>
       Na pia ukitaka we can still have some shots 🥃🍻
+      Ama unataka mzinga 😏😂😂😂
     `;
-    goToPage(4);
+    goToPage('page4');
   }
 </script>
 </body>

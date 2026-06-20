@@ -17,6 +17,35 @@
     justify-content: center;
     overflow-y: auto;
   }
+    .venue-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.8rem;
+  }
+  .venue-item {
+    padding: 0.9rem 0.5rem;
+    border-radius: 14px;
+    border: 2px solid #f0c4cc;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .venue-item span.label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #c0305a;
+  }
+  .venue-item:hover, .venue-item.selected {
+    background: #fff0f3;
+    border-color: #c0305a;
+    transform: scale(1.04);
+  }
 
   .hearts-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
   .heart-float {
@@ -278,8 +307,8 @@
 <!-- PAGE 1: The Question -->
 <div class="page active" id="page1">
   <div class="card">
-    <div class="sticker-box">🥺</div>
-    <h1>Will you go on a date with me?</h1>
+    <div class="sticker-box">🥹</div>
+    <h1>Dottie,,Will you go on a date with me?</h1>
     <p class="sub">Think carefully… only one answer makes sense 😏</p>
     <div class="btn-row">
       <button class="btn btn-yes" onclick="goToReaction()">Yes! 🥰</button>
@@ -318,11 +347,14 @@
 
     <p class="section-label">Time</p>
     <div class="time-grid">
-      <button class="time-btn" onclick="selectTime(this)">10:00 AM</button>
       <button class="time-btn" onclick="selectTime(this)">12:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">1:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">2:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">3:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">4:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">5:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">6:00 PM</button>
+      <button class="time-btn" onclick="selectTime(this)">7:00 PM</button>
       <button class="time-btn" onclick="selectTime(this)">8:00 PM</button>
     </div>
 
@@ -352,8 +384,20 @@
   </div>
 </div>
 
-<!-- PAGE 4: Confirmation -->
 <div class="page" id="page4">
+  <!-- Venue Selection -->
+<p class="section-label">Where shall we go?</p>
+<div class="venue-grid">
+  <div class="venue-item" onclick="toggleVenue(this, 'Aticas')">🍽️<span class="label">Aticas</span></div>
+  <div class="venue-item" onclick="toggleVenue(this, 'Kwa Moni')">🪔<span class="label">Kwa Moni</span></div>
+  <div class="venue-item" onclick="toggleVenue(this, 'Kobbies')">🍔<span class="label">Kobbies</span></div>
+  <div class="venue-item" onclick="toggleVenue(this, 'Scoops and Spoons')">🍦<span class="label">Scoops and Spoons</span></div>
+  <div class="venue-item" onclick="toggleVenue(this, 'AI Cha')">🧋<span class="label">AI Cha</span></div>
+</div>
+</div>
+
+<!-- PAGE 4: Confirmation -->
+<div class="page" id="page5">
   <div class="card">
     <span class="emoji-big">🥳</span>
     <h1>It's a date!</h1>
@@ -453,7 +497,7 @@
       el.classList.add('selected');
       selectedTreats.push(name);
     }
-    document.getElementById('finishBtn').disabled = selectedTreats.length === 0;
+    checkTreatsReady();
   }
 
   // Final confirmation
@@ -462,12 +506,28 @@
     document.getElementById('summaryBox').innerHTML = `
       <strong>Day:</strong> ${selectedDay}<br>
       <strong>Time:</strong> ${selectedTime}<br>
+      <strong>Venue:</strong> ${selectedVenue}<br>
       <strong>On the menu:</strong> ${selectedTreats.join(', ')}<br><br>
       Na pia ukitaka we can still have some shots 🥃🍻
       Ama unataka mzinga 😏😂😂😂
     `;
     goToPage('page4');
   }
+
+  let selectedVenue = null;
+
+function toggleVenue(el, name) {
+  document.querySelectorAll('.venue-item').forEach(v => v.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVenue = name;
+  checkTreatsReady();
+}
+
+// Update your existing checkTreatsReady or finishBtn logic:
+function checkTreatsReady() {
+  document.getElementById('finishBtn').disabled = 
+    !(selectedTreats.length > 0 && selectedVenue);
+}
 </script>
 </body>
 </html>
